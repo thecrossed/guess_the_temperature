@@ -1,6 +1,3 @@
-let w = 800;
-let h = 400;
-let padding = 25;
 let dataset = [
 [1915, 8.593167],
 [1925, 8.534417],
@@ -15,8 +12,10 @@ let dataset = [
 [2015, 9.831000]
 ];
 
-
-/*create svg element*/
+// create svg element
+let w = 800;
+let h = 400;
+let padding = 25;
 let svg = d3.
 select("body").
 append("svg").
@@ -26,40 +25,40 @@ attr("id", "chart").
 on("click", drawDots);
 
 
-/*x scale*/
+// x scale
 let xScale = d3.scale.
 linear().
 domain([1910, 2020]).
 range([padding, w - padding]);
-
-/*y scale*/
-let yScale = d3.scale.
-linear().
-domain([8, 9.9]).
-range([h - padding, padding]);
  
-
-/*x axis*/
+// x axis
 let xAxis = d3.svg.
 axis().
 scale(xScale).
 orient("bottom");
 
-/*append x axis*/
+
+// append x axis
 svg.
-append("g").
+append("g").  /*what is g? http://tutorials.jenkov.com/svg/g-element.html */
 attr({
   class: "xaxis",
   transform: `translate(0, ${h - padding})` }).
 call(xAxis);
 
-/*y axis*/
+// y scale
+let yScale = d3.scale.
+linear().
+domain([8, 9.9]).
+range([h - padding, padding]);
+
+// y axis
 let yAxis = d3.svg.
 axis().
 scale(yScale).
 orient("left");
 
-/*append y axis*/
+// append y axis
 svg.
 append("g").
 attr({
@@ -69,7 +68,7 @@ attr({
 call(yAxis);
 
 
-
+// user draw points on the canvas
 function drawDots() {
   var i = 0;
   i++;
@@ -90,6 +89,7 @@ function drawDots() {
   .style("fill", "white")
 }
 
+// show the historical data
 function drawLine() {
   // define lines
   let lines = d3.svg.
@@ -98,7 +98,7 @@ function drawLine() {
   y(d => yScale(d[1])).
   interpolate("monotone");
 
-  // append line
+  // append the line
   svg.append("path").attr({
   d: lines(dataset),
   class: "lineChart" });
@@ -108,34 +108,27 @@ function drawLine() {
   style("opacity", 0).
   transition().
   duration(2500).
-  //delay(1000).
   delay(200).
   style("opacity", 1);
 
-  /*add points*/
-let points = svg.
-selectAll("circle").
-data(dataset).
-enter().
-append("circle")
-//.call(drag);
+  // define and add points
+  let points = svg.
+  selectAll("circle").
+  data(dataset).
+  enter().
+  append("circle")
 
-/*point attributes*/
-//var i = 0;
-points.
-attr("cy", 0).
-transition().
-duration(1500).
-delay((d, i) => i * 100 + 500).
-ease("elastic").
-attr({
-  cx: d => xScale(d[0]),
-  cy: d => yScale(d[1]),
-  r: 7,
-  class: "datapoint",
-  id: (d, i) => i}).
-
-style("opacity", 1);
-//let xMax = d3.max(dataset, d => d[0]),
-//yMax = d3.max(dataset, d => d[1]);
+  points.
+  attr("cy", 0).
+  transition().
+  duration(1500).
+  delay((d, i) => i * 100 + 500).
+  ease("elastic").
+  attr({
+    cx: d => xScale(d[0]),
+    cy: d => yScale(d[1]),
+    r: 7,
+    class: "datapoint",
+    id: (d, i) => i}).
+  style("opacity", 1);
 }
